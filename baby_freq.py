@@ -7,14 +7,10 @@ from pydub import AudioSegment
 import os
 import sys
 
-MAX_FRQ = 2000
-SLICE_SIZE = 0.15 #seconds
-WINDOW_SIZE = 0.25 #seconds
+SLICE_SIZE = 0.1 #seconds
+WINDOW_SIZE = 0.2 #seconds
 NUMBER_DIC = {}
 
-LOWER_FRQS = [697, 770, 852, 941]
-HIGHER_FRQS = [1209, 1336, 1477, 1633]
-FRQ_THRES = 20
 
 def get_max_frq(frq, fft):
     max_frq = 0
@@ -25,56 +21,10 @@ def get_max_frq(frq, fft):
             max_frq = frq[idx]
     return max_frq
 
-def get_peak_frqs(frq, fft):
-    #TODO: implement an algorithm to find the two maximum values in a given array
-    #get the high and low frequency by splitting it in the middle (1000Hz)
-    low_frq = frq[0:150]
-    high_frq = frq[150:]
-    #spliting the FFT to high and low frequencies
-    low_frq_fft = fft[0:150]
-    high_frq_fft = fft[150:]
-    return (get_max_frq(low_frq, low_frq_fft), get_max_frq(high_frq, high_frq_fft))
-
-def get_number_from_frq(lower_frq, higher_frq):
-    #TODO: given a lower frequency and higher frequency pair
-    #      return the corresponding key otherwise return '?' if no match is found
-    if abs(lower_frq - LOWER_FRQS[0]) <=5:
-        if abs(higher_frq - HIGHER_FRQS[0]) <=5:
-            return 1
-        if abs(higher_frq - HIGHER_FRQS[1]) <=5:
-            return 2
-        if abs(higher_frq - HIGHER_FRQS[2]) <=5:
-            return 3
-    elif abs(lower_frq - LOWER_FRQS[1]) <=5:
-        if abs(higher_frq - HIGHER_FRQS[0]) <=5:
-            return 4
-        if abs(higher_frq - HIGHER_FRQS[1]) <=5:
-            return 5
-        if abs(higher_frq - HIGHER_FRQS[2]) <=5:
-            return 6
-    elif abs(lower_frq - LOWER_FRQS[2]) <=5:
-        if abs(higher_frq - HIGHER_FRQS[0]) <=5:
-            return 7
-        if abs(higher_frq - HIGHER_FRQS[1]) <=5:
-            return 8
-        if abs(higher_frq - HIGHER_FRQS[2]) <=5:
-            return 9
-    elif abs(lower_frq - LOWER_FRQS[3]) <=5:
-        if abs(higher_frq - HIGHER_FRQS[0]) <=5:
-            return '*'
-        if abs(higher_frq - HIGHER_FRQS[1]) <=5:
-            return 0
-        if abs(higher_frq - HIGHER_FRQS[2]) <=5:
-            return '#'
-    else:
-        return '?'
-
-    #return '?'
-
 def main(file):
     print("Importing {}".format(file))
-    audio = AudioSegment.from_mp3(file)
-
+    audioFull = AudioSegment.from_mp3(file)
+    audio = audioFull[0:10000]
     sample_count = audio.frame_count()
     sample_rate = audio.frame_rate
     samples = audio.get_array_of_samples()
@@ -96,35 +46,46 @@ def main(file):
     slice_duration = n/sample_rate                   #slice_duration is the length of time the sample slice is (seconds)
     frq = k/slice_duration                          #generate the frequencies by dividing every element of k by slice_duration
 
-    max_frq_idx = int(MAX_FRQ*slice_duration)       #get the index of the maximum frequency (2000)
-    frq = frq[range(max_frq_idx)]                   #truncate the frequency array so it goes from 0 to 2000 Hz
+    #max_frq_idx = int(MAX_FRQ*slice_duration)       #get the index of the maximum frequency (2000)
+    frq = frq[range(2000)]                   #truncate the frequency array so it goes from 0 to 2000 Hz
 
     start_index = 0                                 #set the starting index at 0
     end_index = start_index + slice_sample_size      #find the ending index for the slice
     output = ''
 
     print()
-    i = 1
+    baby_freq_cnt = 0
+    i = 0
     while end_index < len(samples):
-        print("Sample {}:".format(i))
         i += 1
-
         #TODO: grab the sample slice and perform FFT on it
         sample_slice = samples[start_index: end_index]
         sample_slice_fft = np.fft.fft(sample_slice)/n
         #TODO: truncate the FFT to 0 to 2000 Hz
-        sample_slice_fft = sample_slice_fft[range(max_frq_idx)] #truncate the sample slice fft array so it goes from 0 to 2000 Hz
+        sample_slice_fft = sample_slice_fft[range(2000)] #truncate the sample slice fft array so it goes from 0 to 2000 Hz
         #TODO: calculate the locations of the upper and lower FFT peak using get_peak_frqs()
-        result = get_peak_frqs(frq,abs(sample_slice_fft))
+        #result = get_peak_frqs(frq,abs(sample_slice_fft))
+        result = 2*get_max_frq(frq,abs(sample_slice_fft))
         #TODO: print the values and find the number that corresponds to the numbers
         print(result)
-        print(get_number_from_frq(result[0],result[1]))
+        if(450 < result < 2000):
+            baby_freq_cnt += 1
+        #print(get_number_from_frq(result[0],result[1]))
         #Incrementing the start and end window for FFT analysis
         start_index += int(WINDOW_SIZE*sample_rate)
         end_index = start_index + slice_sample_size
 
     print("Program completed")
     print("User typed: " + str(output))
+    print(baby_freq_cnt)
+    print(i)
+    if(baby_freq_cnt >= .5*i):
+        print("its a ba=by")
+        print(baby_freq_cnt/i)
+        return True
+    else:
+        print("not baby")
+        return False
 
 if __name__ == '__main__':
     if len(sys.argv) != 2 or not os.path.isfile(sys.argv[1]):

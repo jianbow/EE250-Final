@@ -3,10 +3,11 @@
 import paho.mqtt.client as mqtt
 import time
 from grovepi import *
+import baby_freq as baby
 
 #time inbetween reads
 SLEEP_TIME = 30
-#
+
 VOL_CHECK_TIME = 5
 SAMPLE_TIME = 5
 #preset. allows user to change depending on conditions
@@ -60,6 +61,10 @@ if __name__ == '__main__':
             if(max_val >= VOL_THRESHOLD):
                 #TODO: CALL FFT TO SEE IF IN BABY RANGE
                 #since we don't have a microphone for the rpi, we will use a premade mp3 file. In theory, this would come from a recording.
+                if(baby.main("baby.mp3")):
+                    client.publish('llzhuang/alarm','ALARM_ON')
+                #simulate recording time
+                time.sleep(10)
 
         else:
             #we're not in nightmode      

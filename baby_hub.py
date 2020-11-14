@@ -1,10 +1,34 @@
 #to be ran on the hub (in our case, the pc)
 
+from flask import Flask, render_template, redirect, request
+app = Flask(__name__)
+
+
+
 import paho.mqtt.client as mqtt
 import time
 from pynput import keyboard
 
-ALARM_ON = false
+ALARM_ON = True
+IS_ON = False
+
+@app.route("/")
+def start():
+    return render_template('start.html')
+
+@app.route("/alarm", methods = ["GET",'POST'])
+def alarm():
+    onOff = request.args.get('onOff')
+    global ALARM_ON
+    status = 'Ok'
+    if request.method == 'POST':
+        ALARM_ON = False
+    if(ALARM_ON):
+        status = 'CRYING'
+    else:
+        status = 'Ok'
+    return render_template('base.html', **locals())
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
@@ -13,15 +37,17 @@ def on_connect(client, userdata, flags, rc):
     client.message_callback_add("llzhuang/alarm", alarm_callback)
 
 def alarm_callback(client, userdata, message):
-	if(str(message.payload, "utf-8") == 'ALARM_ON'):
-	    ALARM_ON = true
-	else:
-	    ALARM_ON = false
+    global ALARM_ON
+    if(str(message.payload, "utf-8") == 'ALARM_ON'):
+        ALARM_ON = True
+    else:
+        ALARM_ON = False
+    alarm()
 
 #Default message callback. Please use custom callbacks.
 def on_message(client, userdata, msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
-
+"""
 def on_press(key):
     try: 
         k = key.char # single-char keys
@@ -37,22 +63,13 @@ def on_press(key):
     elif k == 'a':
         client.publish('llzhuang/acknowledge','YES')
         ALARM_ON = false
-
+"""
 if __name__ == '__main__':
-    #setup the keyboard event listener
-    lis = keyboard.Listener(on_press=on_press)
-    lis.start() # start to listen on a separate thread
-
     #this section is covered in publisher_and_subscriber_example.py
     client = mqtt.Client()
     client.on_message = on_message
     client.on_connect = on_connect
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
-    print("INPUTS: \n N = NIGHTMODE ON \n M = NIGHTMODE OFF \n A = ACKNOWLEDGE ALARM")
-    while True:
-    	if(ALARM_ON):
-    		print("YOUR BABY IS FREAKING OUT")
-        time.sleep(1)
-            
+    app.run()
 
