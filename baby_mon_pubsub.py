@@ -55,7 +55,7 @@ if __name__ == '__main__':
             #for 5 sec, let's get the max volume
             #we could adjust the resolution of this, but we're dealing with volume so this is fine
             while count < 10:
-                sensor_value = grovepi.analogRead(sound_sensor)
+                sensor_value = analogRead(sound_sensor)
                 print(sensor_value)
                 if(sensor_value > max_val):
                     max_val = sensor_value
