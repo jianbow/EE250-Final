@@ -43,7 +43,6 @@ def on_connect(client, userdata, flags, rc):
 
 
 if __name__ == '__main__':
-    global sound_file
     if len(sys.argv) != 2 or not os.path.isfile(sys.argv[1]):
         print("Usage: baby_mon_pubsub.py [file]")
         exit(1)
