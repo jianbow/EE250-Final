@@ -73,11 +73,11 @@ def main(file):
     #print(baby_freq_cnt)
     #print(i)
     if(baby_freq_cnt >= .5*i):
-        #print("baby crying")
+        print("baby crying")
         #print(baby_freq_cnt/i)
         return True
     else:
-        #print("not baby")
+        print("not baby")
         return False
 
 if __name__ == '__main__':

@@ -14,10 +14,12 @@ IS_ON = False
 
 @app.route("/")
 def start():
+    client.publish('llzhuang/nightMode',"NM_OFF")
     return render_template('start.html')
 
 @app.route("/alarm", methods = ["GET",'POST'])
 def alarm():
+    client.publish('llzhuang/nightMode',"NM_ON")
     onOff = request.args.get('onOff')
     global ALARM_ON
     status = 'Ok'
