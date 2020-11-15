@@ -82,6 +82,6 @@ def main(file):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2 or not os.path.isfile(sys.argv[1]):
-        print("Usage: decode.py [file]")
+        print("Usage: baby_freq.py [file]")
         exit(1)
     main(sys.argv[1])

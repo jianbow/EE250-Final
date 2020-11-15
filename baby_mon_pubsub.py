@@ -16,6 +16,9 @@ VOL_THRESHOLD = 400
 sound_sensor = 0
 #holds bool for nightmode. Night mode constantly monitors the baby, whereas non night mode just turns the device off???
 nightMode = False;
+#holds name for sound file
+sound_file = "baby.mp3"
+
 
 pinMode(sound_sensor,"INPUT")
 
@@ -29,7 +32,9 @@ def nightMode_callback(client, userdata, message):
         nightMode = True
     else:
         nightMode = False
-
+def sound_callback(client, userdata, message):
+    global sound_file
+    sound_file = str(message.payload, "utf-8")
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
@@ -37,9 +42,16 @@ def on_connect(client, userdata, flags, rc):
     #subscribe to nightMode, listens to whether to turn on or off
     client.subscribe('llzhuang/nightMode')
     client.message_callback_add("llzhuang/nightMode", nightMode_callback)
-
+    client.subscribe('llzhuang/sound')
+    client.message_callback_add("llzhuang/sound", sound_callback)
 
 if __name__ == '__main__':
+    global sound_file
+    if len(sys.argv) != 2 or not os.path.isfile(sys.argv[1]):
+        print("Usage: baby_mon_pubsub.py [file]")
+        exit(1)
+    sound_file = sys.argv[1]
+
     #connect to broker
     client = mqtt.Client()
     client.on_message = on_message
@@ -66,7 +78,7 @@ if __name__ == '__main__':
                 print("HEARD SOUND")
                 #TODO: CALL FFT TO SEE IF IN BABY RANGE
                 #since we don't have a microphone for the rpi, we will use a premade mp3 file. In theory, this would come from a recording.
-                if(baby.main("baby.mp3")):
+                if(baby.main(sound_file)):
                     print("publishing to alarm...")
                     client.publish('llzhuang/alarm','ALARM_ON')
                 #simulate recording time

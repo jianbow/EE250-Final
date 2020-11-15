@@ -24,6 +24,7 @@ def alarm():
     global ALARM_ON
     status = 'Ok'
     if request.method == 'POST':
+        client.publish('llzhuang/alarm',"ALARM_OFF")
         ALARM_ON = False
     if(ALARM_ON):
         status = 'CRYING'
@@ -38,13 +39,15 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe('llzhuang/alarm')
     client.message_callback_add("llzhuang/alarm", alarm_callback)
 
+
 def alarm_callback(client, userdata, message):
     global ALARM_ON
     if(str(message.payload, "utf-8") == 'ALARM_ON'):
         ALARM_ON = True
     else:
         ALARM_ON = False
-    alarm()
+
+
 
 #Default message callback. Please use custom callbacks.
 def on_message(client, userdata, msg):
@@ -67,6 +70,7 @@ def on_press(key):
         ALARM_ON = false
 """
 if __name__ == '__main__':
+    
     #this section is covered in publisher_and_subscriber_example.py
     client = mqtt.Client()
     client.on_message = on_message
