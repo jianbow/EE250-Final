@@ -32,9 +32,7 @@ def nightMode_callback(client, userdata, message):
         nightMode = True
     else:
         nightMode = False
-def sound_callback(client, userdata, message):
-    global sound_file
-    sound_file = str(message.payload, "utf-8")
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
@@ -42,8 +40,7 @@ def on_connect(client, userdata, flags, rc):
     #subscribe to nightMode, listens to whether to turn on or off
     client.subscribe('llzhuang/nightMode')
     client.message_callback_add("llzhuang/nightMode", nightMode_callback)
-    client.subscribe('llzhuang/sound')
-    client.message_callback_add("llzhuang/sound", sound_callback)
+
 
 if __name__ == '__main__':
     global sound_file
