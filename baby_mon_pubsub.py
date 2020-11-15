@@ -67,6 +67,7 @@ if __name__ == '__main__':
                 #TODO: CALL FFT TO SEE IF IN BABY RANGE
                 #since we don't have a microphone for the rpi, we will use a premade mp3 file. In theory, this would come from a recording.
                 if(baby.main("baby.mp3")):
+                    print("publishing to alarm...")
                     client.publish('llzhuang/alarm','ALARM_ON')
                 #simulate recording time
                 time.sleep(10)
