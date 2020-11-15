@@ -68,10 +68,7 @@ def main(file):
         start_index += int(WINDOW_SIZE*sample_rate)
         end_index = start_index + slice_sample_size
 
-    #print("Program completed")
-    #print("User typed: " + str(output))
-    #print(baby_freq_cnt)
-    #print(i)
+
     if(baby_freq_cnt >= .5*i):
         print("baby crying")
         #print(baby_freq_cnt/i)
