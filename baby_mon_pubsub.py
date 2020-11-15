@@ -4,6 +4,8 @@ import paho.mqtt.client as mqtt
 import time
 from grovepi import *
 import baby_freq as baby
+import os
+import sys
 
 #time inbetween reads
 SLEEP_TIME = 30
