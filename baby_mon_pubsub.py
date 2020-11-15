@@ -56,10 +56,11 @@ if __name__ == '__main__':
             #we could adjust the resolution of this, but we're dealing with volume so this is fine
             while count < 10:
                 sensor_value = grovepi.analogRead(sound_sensor)
+                print(sensor_value)
                 if(sensor_value > max_val):
                     max_val = sensor_value
                 count+=1
-                sleep(.5);
+                time.sleep(.5);
             if(max_val >= VOL_THRESHOLD):
                 print("HEARD SOUND")
                 #TODO: CALL FFT TO SEE IF IN BABY RANGE
