@@ -15,7 +15,7 @@ VOL_THRESHOLD = 400
 #connect sound sensor to A0
 sound_sensor = 0
 #holds bool for nightmode. Night mode constantly monitors the baby, whereas non night mode just turns the device off???
-nightMode = false;
+nightMode = False;
 
 pinMode(sound_sensor,"INPUT")
 
@@ -23,9 +23,9 @@ pinMode(sound_sensor,"INPUT")
 
 def nightMode_callback(client, userdata, message):
     if(str(message.payload, "utf-8") == 'NM_ON'):
-        nightMode = true
+        nightMode = True
     else:
-        nightMode = false
+        nightMode = False
 
 
 def on_connect(client, userdata, flags, rc):
