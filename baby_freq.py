@@ -27,12 +27,12 @@ def main(file):
     sample_count = audio.frame_count()
     sample_rate = audio.frame_rate
     samples = audio.get_array_of_samples()
-
+"""
     print("Number of channels: " + str(audio.channels))
     print("Sample count: " + str(sample_count))
     print("Sample rate: " + str(sample_rate))
     print("Sample width: " + str(audio.sample_width))
-
+"""
     period = 1/sample_rate                     #the period of each sample
     duration = sample_count/sample_rate         #length of full audio in seconds
 
@@ -66,7 +66,7 @@ def main(file):
         #result = get_peak_frqs(frq,abs(sample_slice_fft))
         result = 2*get_max_frq(frq,abs(sample_slice_fft))
         #TODO: print the values and find the number that corresponds to the numbers
-        print(result)
+        #print(result)
         if(450 < result < 2000):
             baby_freq_cnt += 1
         #print(get_number_from_frq(result[0],result[1]))
@@ -74,16 +74,16 @@ def main(file):
         start_index += int(WINDOW_SIZE*sample_rate)
         end_index = start_index + slice_sample_size
 
-    print("Program completed")
-    print("User typed: " + str(output))
-    print(baby_freq_cnt)
-    print(i)
+    #print("Program completed")
+    #print("User typed: " + str(output))
+    #print(baby_freq_cnt)
+    #print(i)
     if(baby_freq_cnt >= .5*i):
-        print("its a ba=by")
-        print(baby_freq_cnt/i)
+        #print("baby crying")
+        #print(baby_freq_cnt/i)
         return True
     else:
-        print("not baby")
+        #print("not baby")
         return False
 
 if __name__ == '__main__':
