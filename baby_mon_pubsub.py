@@ -17,7 +17,7 @@ sound_sensor = 0
 #holds bool for nightmode. Night mode constantly monitors the baby, whereas non night mode just turns the device off???
 nightMode = False;
 #holds name for sound file
-sound_file = "baby.mp3"
+sound_file = ""
 
 
 pinMode(sound_sensor,"INPUT")
