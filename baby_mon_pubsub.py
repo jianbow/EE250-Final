@@ -19,7 +19,9 @@ nightMode = False;
 
 pinMode(sound_sensor,"INPUT")
 
-
+#Default message callback. Please use custom callbacks.
+def on_message(client, userdata, msg):
+    print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
 
 def nightMode_callback(client, userdata, message):
     if(str(message.payload, "utf-8") == 'NM_ON'):
