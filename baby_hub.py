@@ -9,7 +9,7 @@ import paho.mqtt.client as mqtt
 import time
 from pynput import keyboard
 
-ALARM_ON = True
+ALARM_ON = False
 IS_ON = False
 
 @app.route("/")
