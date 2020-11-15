@@ -1,7 +1,6 @@
 # GITHUB REPO: https://github.com/usc-ee250-fall2020/lab08-lab08
 # GROUP MEMBERS: Leo Zhuang and Richard Huang
 
-import matplotlib.pyplot as plt
 import numpy as np
 from pydub import AudioSegment
 import os
