@@ -15,7 +15,7 @@ VOL_THRESHOLD = 400
 #connect sound sensor to A0
 sound_sensor = 0
 #holds bool for nightmode. Night mode constantly monitors the baby, whereas non night mode just turns the device off???
-nightMode = False;
+nightMode = True;
 
 pinMode(sound_sensor,"INPUT")
 
