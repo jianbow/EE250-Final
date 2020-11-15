@@ -56,9 +56,10 @@ if __name__ == '__main__':
                 sensor_value = grovepi.analogRead(sound_sensor)
                 if(sensor_value > max_val):
                     max_val = sensor_value
-                count++
+                count+=1
                 sleep(.5);
             if(max_val >= VOL_THRESHOLD):
+                print("HEARD SOUND")
                 #TODO: CALL FFT TO SEE IF IN BABY RANGE
                 #since we don't have a microphone for the rpi, we will use a premade mp3 file. In theory, this would come from a recording.
                 if(baby.main("baby.mp3")):
