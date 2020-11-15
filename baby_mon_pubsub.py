@@ -66,7 +66,3 @@ if __name__ == '__main__':
                     client.publish('llzhuang/alarm','ALARM_ON')
                 #simulate recording time
                 time.sleep(10)
-
-        else:
-            #we're not in nightmode      
-
